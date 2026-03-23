@@ -17,17 +17,53 @@ Graph *MyGraph(int n){
             
             for(int j = 0; j < n; j++){
                 G->matrix[i][j] = -1;
-                printf("%d ", G->matrix[i][j]);
             }
 
-            printf("\n");
         }
     }
 
     return G;
 }
 
+/*Eduardo*/
+bool exist_edge(Graph *G, int v1, int v2){
+  if (G != NULL && G->matrix[v1][v2] > -1) return true;
+  
+  return false;
+}
 
+int remove_edge(Graph *G, int v1, int v2){
+  if (G != NULL){
+    int aux = G->matrix[v1][v2];
+    G->matrix[v1][v2] = -1;
+    return aux;
+  }
+  return -1;
+}
+
+/*João Conde*/
+bool delete_graph(Graph **G){
+    if(G == NULL || *G == NULL) return false;
+
+    for(int i = 0; i < (*G)->n; i++){
+
+        if((*G)->matrix[i] != NULL){
+            free((*G)->matrix[i]);
+            (*G)->matrix[i] = NULL;
+        }
+    }
+
+    free(*G);
+    *G = NULL;
+    return true;
+}
+
+
+int **adjacency_matrix(Graph *G){
+    if(G == NULL) return NULL; 
+
+    return G->matrix;
+}
 
 
 /* João Neves*/
@@ -49,7 +85,7 @@ void print_info(Graph* G){
                 }
             }
         }
-        printf("\b\b]\n");
+        printf("]\n");
 
     }
     return;
