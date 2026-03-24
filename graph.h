@@ -20,16 +20,15 @@
     int remove_edge(Graph *G, int v1, int v2); //retornar -1, se não existir aresta
     //Neves
     void print_info(Graph *G); //formato especificado no final do arquivo do trabalho
-    //Conde
     /*Recebe um ponteiro de ponteiro de Graph e desaloca a memória de todo o grafo 
     e seta para o ponteiro de Graph o valor nulo, evitando acesso indevido à memória. 
     Retorna true, se o processo foi concluído com sucesso; false, senão*/
     bool delete_graph(Graph **G); 
     //Neves
     int max_neighbors(Graph *G); //primeiro com mais vizinhos
-    //Conde
-    /*Recebe um ponteiro de Graph e retorna um ponteiro para matriz de adjacência que representa o grafo;
-    em caso de parâmetro inválido, retorna NULL*/
+    /*Recebe um ponteiro de Graph e retorna um ponteiro para uma cópia da matriz de adjacência que representa o grafo;
+    em caso de parâmetro inválido, retorna NULL. Como é uma cópia, a mudança de seus valores não afetará a matriz original 
+    que representa o gráfico.*/
     int **adjacency_matrix(Graph *G); //por enquanto faz retornando
 
 

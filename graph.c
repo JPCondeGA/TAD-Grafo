@@ -46,7 +46,19 @@ bool delete_graph(Graph **G){
 int **adjacency_matrix(Graph *G){
     if(G == NULL) return NULL; 
 
-    return G->matrix;
+    /*Não podemos retornar a G->matrix em si, pois seria possível manipular os valores interiores do TAD
+    sem ser por meio somente das funções, quebrando o conceito de TAD. Desse modo, vamos retorna a matrix_aux*/
+    int **matrix_aux = (int**)malloc(sizeof(int*)*(G->n)); //A alocação deve ser dinâmica para que a matrix_aux não seja apagada ao fim da função
+
+    //Copiando matriz
+    for(int i = 0; i < G->n; i++){
+        matrix_aux[i] = (int*)malloc(sizeof(int)*(G->n));
+        for(int j = 0; j < G->n; j++){
+            matrix_aux[i][j] = G->matrix[i][j]; 
+        }
+    }
+
+    return matrix_aux;
 }
 
 
