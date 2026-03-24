@@ -99,11 +99,6 @@ int *neighbors(Graph *G, int v){
             }
             return array;
         }
-        else{
-            int *array = (int*)malloc(sizeof(int));
-            array[0] = -1;
-            return array;
-        }
     }
 
     return NULL;
