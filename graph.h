@@ -30,7 +30,8 @@
     int *neighbors(Graph *G, int v);
 
     /*Função E*/
-    /*Recebe um ponteiro para Graph e os índices de dois vértices*/
+    /*Recebe um ponteiro para Graph e os índices de dois vértices e remove a aresta entre esses dois vértices.
+    Retorna o valor da aresta que havia entre os dois vértices (-1, em caso de não haver aresta).*/
     int remove_edge(Graph *G, int v1, int v2);
 
     /*Função F*/
