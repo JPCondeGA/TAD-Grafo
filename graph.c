@@ -25,6 +25,22 @@ Graph *MyGraph(int n){
     return G;
 }
 
+/*Eduardo*/
+bool exist_edge(Graph *G, int v1, int v2){
+  if (G != NULL && G->matrix[v1][v2] > -1) return true;
+  
+  return false;
+}
+
+int remove_edge(Graph *G, int v1, int v2){
+  if (G != NULL){
+    int aux = G->matrix[v1][v2];
+    G->matrix[v1][v2] = -1;
+    return aux;
+  }
+  return -1;
+}
+
 /*João Conde*/
 bool delete_graph(Graph **G){
     if(G == NULL || *G == NULL) return false;
