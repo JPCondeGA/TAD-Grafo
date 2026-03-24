@@ -123,3 +123,54 @@ int max_neighbors(Graph *G){
 
     return vertice;
 }
+
+/*Luiz Henrique*/
+
+//como na descricao do trabalho nao diz nada sobre grafos direcionados ou nao, so levei em conta o caso do grafo nao direcionado
+//por isso a adicao do valor da aresta em matriz[v1][v2] e matriz[v2][v1]
+bool add_edge(Graph *G, int v1, int v2, int w){
+
+    if(G != NULL && v1 >= 0 && v1 < G->n && v2 >= 0 && v2 < G->n && w >= 0){
+        G->matrix[v1][v2] = w;
+        G->matrix[v2][v1] = w;
+        return true;
+    }
+    
+    return false;
+}
+
+//essa funcao retorna um array de um elemento (-1) caso o vertice dado nao possui vertices adjacentes
+int *neighbors(Graph *G, int v){
+
+    int grau = 0;
+
+    if(G != NULL && v < G->n){
+        for(int i = 0; i < G->n; i++){
+            if(G->matrix[v][i] != -1){
+                grau++;
+            }
+        }
+        
+        if(grau != 0){
+
+            int *array = (int*)malloc(sizeof(int)*grau);
+            
+            int n = 0;
+            for(int i = 0; i < G->n; i++){
+                if(G->matrix[v][i] != -1){
+                    array[n] = i;
+                    n++;
+                }
+
+            }
+            return array;
+        }
+        else{
+            int *array = (int*)malloc(sizeof(int));
+            array[0] = -1;
+            return array;
+        }
+    }
+
+    return NULL;
+}
