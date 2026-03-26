@@ -148,11 +148,9 @@ void print_info(Graph* G, int* neighbors, int neighbors_tam){
         }
     }
     
-    printf("Vizinhos = [");
     for (int i = 0; i < neighbors_tam - 1; i++){
         printf("%d, ", neighbors[i] + 1);
     }
-    printf("%d]\n", neighbors[neighbors_tam]);
     
 }
 
