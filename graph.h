@@ -45,7 +45,7 @@
     /*Recebe um ponteiro de ponteiro de Graph e desaloca a memória de todo o grafo 
     e seta para o ponteiro de Graph o valor nulo, evitando acesso indevido à memória. 
     Retorna true, se o processo foi concluído com sucesso; false, senão*/
-    bool delete_graph(Graph **G); 
+    bool remove_graph(Graph **G); 
     
     /*Função H*/
     /*Recebe um ponteiro de Graph e encontra o vértice com maior grau (maior número de vizinhos).

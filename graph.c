@@ -11,7 +11,7 @@ struct graph_{
 /*Recebe o índice de um vértice e o número de vértices e verifica se o índice é válido.
 Retorna true, se o índice está entre 0 e n (inclusivo); false, caso contrário.*/
 bool check_vertex(int v, int n){
-    return (0 <= v && v <= n);
+    return (0 <= v && v < n);
 }
 
 
@@ -26,11 +26,11 @@ Graph *MyGraph(int n){
         G->n = n;
 
         //Alocando matriz
-        G->matrix = (int**)malloc(sizeof(int*)*(n+1));
+        G->matrix = (int**)malloc(sizeof(int*)*n);
 
         //Alocando linhas da matriz
         for(int i = 0; i < n; i++){
-            G->matrix[i] = (int*)malloc(sizeof(int)*(n+1));
+            G->matrix[i] = (int*)malloc(sizeof(int)*n);
             
             //Inicializando matriz (-1, valor inválido para peso)
             for(int j = 0; j < n; j++){
@@ -49,7 +49,6 @@ Graph *MyGraph(int n){
 Por isso, ocorre a adição do valor da aresta em matriz[v1][v2] e matriz[v2][v1]*/
 
 bool add_edge(Graph *G, int v1, int v2, int w){
-
     //Conferindo se os vértices estão no conjunto de vértices do grafo
     if(G != NULL && check_vertex(v1, G->n) && check_vertex(v2, G->n) && w >= 0){
         G->matrix[v1][v2] = w;
@@ -106,15 +105,13 @@ int *neighbors(Graph *G, int v){
 
 /*==========================FUNÇÃO E=============================*/
 
-int remove_edge(Graph *G, int v1, int v2){
-    int aux = -1;
-    
+int remove_edge(Graph *G, int v1, int v2){    
     if (G != NULL && check_vertex(v1, G->n) && check_vertex(v2, G->n)){
-        aux = G->matrix[v1][v2]; 
         G->matrix[v1][v2] = -1; //Resseta o peso da aresta para -1
+        return 1;
     }
 
-    return aux;
+    return -1;
 }
 
 /*==========================FUNÇÃO F=============================*/
@@ -122,22 +119,28 @@ int remove_edge(Graph *G, int v1, int v2){
 void print_info(Graph* G){
     if (G != NULL){
         int n = G->n;
+        bool have_edge = false;
 
         //Imprimindo índice dos vértices de 1 a n
         printf("V = [");
-        for (int i = 0; i <= n - 1; i++){
-            printf("%d, ", i);
+        for (int i = 0; i < n-1; i++){
+            printf("%d, ", i+1);
         }
         printf("%d]\n", n);
 
         //Imprimindo arestas no formato (v1,  v2), em que v1 e v2 sao os vértices ligados por essa aresta
         printf("E = [");
         for (int i = 0; i < n; i++){
-            for (int j = 0; j <= n; j++){
+            for (int j = i; j < n; j++){
 
                 //Só há aresta se o peso não for negativo
-                if (G->matrix[i][j] != -1){
-                    printf("(%d, %d), ", i, j);
+                if (G->matrix[j][i] != -1){
+                    if(!have_edge){
+                        printf("(%d, %d)", i+1, j+1);
+                        have_edge = true;
+                    }else{
+                        printf(", (%d, %d)", i+1, j+1);
+                    }
                 }
                 
             }
@@ -150,7 +153,7 @@ void print_info(Graph* G){
 
 /*==========================FUNÇÃO G=============================*/
 
-bool delete_graph(Graph **G){
+bool remove_graph(Graph **G){
     if(G == NULL || *G == NULL) return false;
 
     for(int i = 0; i < (*G)->n; i++){
@@ -214,7 +217,7 @@ int max_neighbors(Graph *G){
                     mais_por_linha++;
             }
 
-            if (mais_por_linha >= mais_vizinhos){ //somente >, para pegar o primeiro
+            if (mais_por_linha >= mais_vizinhos){ 
                 mais_vizinhos = mais_por_linha;
                 vertice = i;
             }
