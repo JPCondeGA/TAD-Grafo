@@ -27,7 +27,7 @@
     /*Função D*/
     /*Recebe um ponteiro para Graph e o índice de um vértice. Retorna um ponteiro para um array com índices 
     dos vértices vizinhos ao passado por parâmetro. Em caso do vértice não ter vizinhos, retorna um ponteiro NULL*/
-    int *neighbors(Graph *G, int v);
+    int *neighbors(Graph *G, int v, int *tam);
 
     /*Função E*/
     /*Recebe um ponteiro para Graph e os índices de dois vértices e remove a aresta entre esses dois vértices.
@@ -39,7 +39,7 @@
     V = [v1, v2, v3, v4,...]
     E = [(v1, v2), (v3, v4), ...]
     em que vi é o índice do vértice i e (vi, vj) é a aresta que liga os vértices vi e vj*/
-    void print_info(Graph *G); 
+    void print_info(Graph *G, int *neighbors, int neighbors_tam); 
 
     /*Função G*/
     /*Recebe um ponteiro de ponteiro de Graph e desaloca a memória de todo o grafo 
