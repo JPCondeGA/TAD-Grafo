@@ -1,6 +1,9 @@
+/*========================= Arquivo graph.c ===============================*/
 #include "graph.h"
 
+
 /*==========================STRUCT=============================*/
+
 struct graph_{
     int **matrix; //Ponteiro para matriz de adjacência
     int n; //Quantidade de vértices do grafo
@@ -14,12 +17,31 @@ bool check_vertex(int v, int n){
     return (0 <= v && v < n);
 }
 
+bool remove_mat(int ***mat, int n){
+    if(mat != NULL && *mat != NULL){
+
+        for(int i = 0; i < n; i++){
+            if((*mat)[i] != NULL){
+                free((*mat)[i]);
+                (*mat)[i] = NULL;
+            }
+        }
+        
+        free(*mat);
+        *mat = NULL;
+        return true;
+
+    }
+    return false;
+}
 
 /*==========================FUNÇÃO A=============================*/
 
 Graph *MyGraph(int n){
     //Alocando struct
     Graph *G = (Graph*)malloc(sizeof(Graph));
+    int i;
+    bool flag;
 
     //Se deu certo a alocação da struct
     if(G != NULL){
@@ -28,15 +50,41 @@ Graph *MyGraph(int n){
         //Alocando matriz
         G->matrix = (int**)malloc(sizeof(int*)*n);
 
-        //Alocando linhas da matriz
-        for(int i = 0; i < n; i++){
-            G->matrix[i] = (int*)malloc(sizeof(int)*n);
-            
-            //Inicializando matriz (-1, valor inválido para peso)
-            for(int j = 0; j < n; j++){
-                G->matrix[i][j] = -1;
+        //Se não conseguiu alocar
+        if(G->matrix == NULL){
+            free(G);
+            G = NULL;
+        }
+        else{
+            //Alocando linhas da matriz
+
+            flag = true; //Verifica se todas as alocações ocorrerão corretamente
+            for(i = 0; i < n; i++){
+                G->matrix[i] = (int*)malloc(sizeof(int)*n);
+                
+                if(G->matrix[i] == NULL){
+                    flag = false;
+                    break;
+                }
+                
+                //Inicializando matriz (-1, valor inválido para peso)
+                for(int j = 0; j < n; j++){
+                    G->matrix[i][j] = -1;
+                }
+
             }
 
+            //Se alguma alocação não deu certo, vamos desalocar tudo e retornar NULL
+            if(!flag){
+                //Desalocando linhas
+                for(i = i - 1; i >= 0; i--) free(G->matrix[i]);
+
+                //Desalocando matriz e grafo
+                free(G->matrix);
+                free(G);
+                
+                G = NULL;
+            }
         }
     }
 
@@ -49,7 +97,7 @@ Graph *MyGraph(int n){
 Por isso, ocorre a adição do valor da aresta em matriz[v1][v2] e matriz[v2][v1]*/
 
 bool add_edge(Graph *G, int v1, int v2, int w){
-    //Conferindo se os vértices estão no conjunto de vértices do grafo
+    //Conferindo se os vértices estão no conjunto de vértices do grafo e que o peso é válido
     if(G != NULL && check_vertex(v1, G->n) && check_vertex(v2, G->n) && w >= 0){
         G->matrix[v1][v2] = w;
         G->matrix[v2][v1] = w;
@@ -105,23 +153,23 @@ int *neighbors(Graph *G, int v, int *tam){
 
 /*==========================FUNÇÃO E=============================*/
 
-int remove_edge(Graph *G, int v1, int v2){    
-    if (G != NULL && check_vertex(v1, G->n) && check_vertex(v2, G->n)){
+char remove_edge(Graph *G, int v1, int v2){    
+    if (G != NULL && check_vertex(v1, G->n) && check_vertex(v2, G->n) && G->matrix[v1][v2] != -1){
         G->matrix[v1][v2] = -1; //Resseta o peso da aresta para -1
-        return 1;
+        G->matrix[v2][v1] = -1; //O grafo é não-direcionado
+        return 1; //Remoção ocorreu corretamente
     }
 
-    return -1;
+    return -1; //Já não havia aresta
 }
 
 /*==========================FUNÇÃO F=============================*/
 
-/*Função que mostra o conjunto V dos vértices do grafo, assim com o conjunto de tuplas E das arestas*/
 void print_info(Graph* G, int* neighbors, int neighbors_tam){
-    if (neighbors == NULL){
+    if (neighbors == NULL){ //Se não há vizinhos para mostrar
         if (G != NULL){
             int n = G->n;
-            bool have_edge = false;
+            bool have_edge = false; //Sinaliza se há ao menos uma aresta no grafo
 
             //Imprimindo índice dos vértices de 1 a n
             printf("V = [");
@@ -130,7 +178,7 @@ void print_info(Graph* G, int* neighbors, int neighbors_tam){
             }
             printf("%d]\n", n);
 
-            //Imprimindo arestas no formato (v1,  v2), em que v1 e v2 sao os vértices ligados por essa aresta
+            //Imprimindo arestas no formato (v1,  v2), em que v1 e v2 são os vértices ligados por essa aresta
             printf("E = [");
             for (int i = 0; i < n; i++){
                 for (int j = 0; j < i; j++){
@@ -150,7 +198,8 @@ void print_info(Graph* G, int* neighbors, int neighbors_tam){
             printf("]\n");
         }
     }
-    else{   
+    else{  //Se há vizinhos para mostrar
+        //Imprimindo array de vizinhos
         for (int i = 0; i < neighbors_tam-1; i++){
             printf("%d ", neighbors[i] + 1);
         }
@@ -163,18 +212,7 @@ void print_info(Graph* G, int* neighbors, int neighbors_tam){
 bool remove_graph(Graph **G){
     if(G == NULL || *G == NULL) return false;
 
-    for(int i = 0; i < (*G)->n; i++){
-    
-        //Liberando a alocação de cada linha da matriz
-        if((*G)->matrix[i] != NULL){
-            free((*G)->matrix[i]);
-            (*G)->matrix[i] = NULL;
-        }
-    
-    }
-    
-    //Liberando a alocação da matriz
-    free((*G)->matrix);
+    remove_mat(&((*G)->matrix), (*G)->n);
     
     //Liberando a alocação da struct do grafo
     free(*G);
@@ -192,12 +230,32 @@ int **adjacency_matrix(Graph *G){
     /*Não podemos retornar a G->matrix em si, pois seria possível manipular os valores interiores do TAD
     sem ser por meio somente das funções, quebrando o conceito de TAD. Desse modo, vamos retorna a matrix_aux*/
     int **matrix_aux = (int**)malloc(sizeof(int*)*(G->n)); //A alocação deve ser dinâmica para que a matrix_aux não seja apagada ao fim da função
+    bool flag; 
+    int i;
 
     //Copiando matriz
-    for(int i = 0; i < G->n; i++){
-        matrix_aux[i] = (int*)malloc(sizeof(int)*(G->n));
-        for(int j = 0; j < G->n; j++){
-            matrix_aux[i][j] = G->matrix[i][j]; 
+    if(matrix_aux != NULL){
+
+        flag = true; //Verificar se alocação deu certo
+        for(i = 0; i < G->n; i++){
+            matrix_aux[i] = (int*)malloc(sizeof(int)*(G->n));
+
+            if(matrix_aux[i] == NULL){
+                flag = false;
+                break;
+            }
+
+            for(int j = 0; j < G->n; j++){
+                matrix_aux[i][j] = G->matrix[i][j]; 
+            }
+        }
+
+        //Se alguma alocação não funcionou, vamos desalocar tudo
+        if(!flag){
+            for(i = i - 1; i >= 0; i--) free(matrix_aux[i]);
+            free(matrix_aux);
+
+            matrix_aux = NULL;
         }
     }
 
@@ -205,8 +263,6 @@ int **adjacency_matrix(Graph *G){
 }
 
 /*==========================FUNÇÃO I=============================*/
-
-
 
 int max_neighbors(Graph *G){
     int vertice = -1; //Se G for um ponteiro inválido, retorna -1
@@ -216,12 +272,11 @@ int max_neighbors(Graph *G){
         int mais_vizinhos = 0; //Guarda o maior grau de um vértice naquele grafo
         int n = G->n;
 
-        for (int i = n; i >= 0; i--){
+        for (int i = n-1; i >= 0; i--){
 
-            int mais_por_linha = -1; //conta quantos vizinhos tem o vértice i
-            //Começa em -1, para pelo menos entrar uma vez no if
+            int mais_por_linha = 0; //conta quantos vizinhos tem o vértice i
             
-            for (int j = n; j >= 0; j--){
+            for (int j = n-1; j >= 0; j--){
                 if (G->matrix[i][j] != -1)
                     mais_por_linha++;
             }
