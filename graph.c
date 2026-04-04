@@ -1,9 +1,6 @@
-/*========================= Arquivo graph.c ===============================*/
 #include "graph.h"
 
-
 /*==========================STRUCT=============================*/
-
 struct graph_{
     int **matrix; //Ponteiro para matriz de adjacência
     int n; //Quantidade de vértices do grafo
@@ -11,8 +8,8 @@ struct graph_{
 
 /*======================FUNÇÃO AUXILIARES=========================*/
 
-/*Recebe o índice de um vértice e o número de vértices e verifica se o índice é válido.
-Retorna true, se o índice está entre 0 e n (inclusivo); false, caso contrário.*/
+/* Recebe o índice de um vértice e o número de vértices e verifica se o índice é válido.
+Retorna true, se o índice está entre 0 e n (inclusivo); false, caso contrário. */
 bool check_vertex(int v, int n){
     return (0 <= v && v < n);
 }
@@ -58,7 +55,7 @@ Graph *MyGraph(int n){
         else{
             //Alocando linhas da matriz
 
-            flag = true; //Verifica se todas as alocações ocorrerão corretamente
+            flag = true; //Verifica se todas as alocações ocorreram corretamente
             for(i = 0; i < n; i++){
                 G->matrix[i] = (int*)malloc(sizeof(int)*n);
                 
@@ -198,7 +195,8 @@ void print_info(Graph* G, int* neighbors, int neighbors_tam){
             printf("]\n");
         }
     }
-    else{  //Se há vizinhos para mostrar
+    //Se há vizinhos para mostrar
+    else{  
         //Imprimindo array de vizinhos
         for (int i = 0; i < neighbors_tam-1; i++){
             printf("%d ", neighbors[i] + 1);
@@ -224,6 +222,39 @@ bool remove_graph(Graph **G){
 
 /*==========================FUNÇÃO H=============================*/
 
+int max_neighbors(Graph *G){
+    int vertice = -1; //Se G for um ponteiro inválido, retorna -1
+
+    if (G != NULL){
+
+        //Guarda o maior grau de um vértice naquele grafo
+        int mais_vizinhos = 0; 
+        int n = G->n;
+
+        for (int i = n-1; i >= 0; i--){
+
+            // Conta quantos vizinhos tem o vértice i
+            int mais_por_linha = 0; 
+            
+            for (int j = n-1; j >= 0; j--){
+                if (G->matrix[i][j] != -1)
+                    mais_por_linha++;
+            }
+            if (mais_por_linha >= mais_vizinhos){ 
+                mais_vizinhos = mais_por_linha;
+                vertice = i;
+            }
+
+        }
+    }
+    // Retornando -1, se necessário
+    if(vertice < 0) return vertice;
+    // Retornando 1-indexado
+    return vertice+1; 
+}
+
+/*==========================FUNÇÃO I=============================*/
+
 int **adjacency_matrix(Graph *G){
     if(G == NULL) return NULL; 
 
@@ -236,7 +267,8 @@ int **adjacency_matrix(Graph *G){
     //Copiando matriz
     if(matrix_aux != NULL){
 
-        flag = true; //Verificar se alocação deu certo
+        //Verifica se as alocações deu certo
+        flag = true; 
         for(i = 0; i < G->n; i++){
             matrix_aux[i] = (int*)malloc(sizeof(int)*(G->n));
 
@@ -260,33 +292,4 @@ int **adjacency_matrix(Graph *G){
     }
 
     return matrix_aux;
-}
-
-/*==========================FUNÇÃO I=============================*/
-
-int max_neighbors(Graph *G){
-    int vertice = -1; //Se G for um ponteiro inválido, retorna -1
-
-    if (G != NULL){
-
-        int mais_vizinhos = 0; //Guarda o maior grau de um vértice naquele grafo
-        int n = G->n;
-
-        for (int i = n-1; i >= 0; i--){
-
-            int mais_por_linha = 0; //conta quantos vizinhos tem o vértice i
-            
-            for (int j = n-1; j >= 0; j--){
-                if (G->matrix[i][j] != -1)
-                    mais_por_linha++;
-            }
-            if (mais_por_linha >= mais_vizinhos){ 
-                mais_vizinhos = mais_por_linha;
-                vertice = i;
-            }
-
-        }
-    }
-
-    return vertice;
 }

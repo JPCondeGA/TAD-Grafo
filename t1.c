@@ -1,5 +1,19 @@
 /*========================= Arquivo graph.h ===============================*/
 
+/*
+NOME: João Pedro Neves
+N° USP: 14713404
+
+NOME: Eduardo Benedini Bueno
+N° USP: 16862551
+
+NOME: Luiz Henrique Martins Silva
+N° USP: 15695612
+
+NOME: João Pedro Conde Gomes Alves
+N° USP: 16816271 
+*/
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -7,69 +21,77 @@
 /*Graph é o tipo abstrato que representa um grafo.*/
 typedef struct graph_ Graph;
 
-/*Função A*/
-/*Recebe um inteiro n e aloca memória para um Graph de n vértices e nenhuma aresta. 
-Retorna o endereço da posição da memória alocada. Se o retorno for NULL, quer dizer que a alocação não deu certo*/
+/*Função A
+- Recebe um inteiro n e aloca memória para um Graph de n vértices e nenhuma aresta. 
+- Retorna o endereço da posição da memória alocada. Se o retorno for NULL, quer dizer que a alocação não deu certo. */
 Graph *MyGraph(int n);
 
-/*Função B*/
-/*Recebe um ponteiro de Graph, os índices de dois vértice e o peso das arestas e cria uma aresta entre
-esses vértices com tal peso. Retorna true, se inserção da arestasa ocorreu corretamente; false, caso contrário.
-Estamos considerando que o grafo é não direcionado. O peso deve ser um valor maior ou igual a 0.*/
+/*Função B
+/* -Recebe um ponteiro de Graph, os índices de dois vértice e o peso das arestas e cria uma aresta entre
+esses vértices com tal peso. 
+- Retorna true, se inserção da arestasa ocorreu corretamente; false, caso contrário.
+
+Estamos considerando que o grafo é não direcionado. O peso deve ser um valor maior ou igual a 0. */
 bool add_edge(Graph *G, int v1, int v2, int w); 
 
-/*Recebe um ponteiro de Graph e os índices de dois vértices e verifica se existe uma aresta entre esses dois vértices.
-Retorna true, se existir; false, senão.*/
+/* Função C
+- Recebe um ponteiro de Graph e os índices de dois vértices e verifica se existe uma aresta entre esses dois vértices.
+- Retorna true, se existir; false, senão. */
 bool exist_edge(Graph *G, int v1, int v2); 
 
-/*Função D*/
-/*Recebe um ponteiro para Graph e o índice de um vértice. Retorna um ponteiro para um array com índices 
-dos vértices vizinhos ao passado por parâmetro. Em caso do vértice não ter vizinhos, retorna um ponteiro NULL*/
+/*Função D
+- Recebe um ponteiro para Graph e o índice de um vértice. 
+- Retorna um ponteiro para um array com índices dos vértices vizinhos ao passado por parâmetro. Em caso do vértice não ter vizinhos, retorna um ponteiro NULL. */
 int *neighbors(Graph *G, int v, int *tam);
 
-/*Função E*/
-/*Recebe um ponteiro para Graph e os índices de dois vértices e remove a aresta entre esses dois vértices.
-Retorna 1, se deu certo a remoção, e -1, em caso de já não haver aresta. O tipo escolhida para a função foi char 
-para ocupar menos espaço, já que há só dois retornos possíveis.*/
+/*Função E
+- Recebe um ponteiro para Graph e os índices de dois vértices e remove a aresta entre esses dois vértices.
+- Retorna 1, se deu certo a remoção, e -1, em caso de já não haver aresta. O tipo escolhida para a função foi char 
+para ocupar menos espaço, já que há só dois retornos possíveis. */
 char remove_edge(Graph *G, int v1, int v2);
 
-/*Função F*/
-/*Recebe um ponteiro para Graph e imprime o conjunto de vértices e o conjunto de arestas no formato:
-V = [v1, v2, v3, v4,...]
-E = [(v1, v2), (v3, v4), ...]
+/*Função F
+- Recebe um ponteiro para Graph e imprime o conjunto de vértices e o conjunto de arestas no formato:
+  * V = [v1, v2, v3, v4,...]
+  * E = [(v1, v2), (v3, v4), ...]
+  
 em que vi é o índice do vértice i e (vi, vj) é a aresta que liga os vértices vi e vj*/
 void print_info(Graph *G, int *neighbors, int neighbors_tam); 
 
-/*Função G*/
-/*Recebe um ponteiro de ponteiro de Graph e desaloca a memória de todo o grafo 
-e seta para o ponteiro de Graph o valor nulo, evitando acesso indevido à memória. 
-Retorna true, se o processo foi concluído com sucesso; false, senão*/
+/*Função G
+- Recebe um ponteiro de ponteiro de Graph e desaloca a memória de todo o grafo e seta para o ponteiro de Graph o valor nulo, evitando acesso indevido à memória. 
+- Retorna true, se o processo foi concluído com sucesso; false, senão*/
 bool remove_graph(Graph **G); 
 
-/*Função H*/
-/*Recebe um ponteiro de Graph e encontra o vértice com maior grau (maior número de vizinhos).
-Retorna o índice desse vértice.*/
-int max_neighbors(Graph *G); 
+/*Função H
+- Recebe um ponteiro de Graph.
+- Retorna um ponteiro para uma cópia da matriz de adjacência que representa o grafo;em caso de parâmetro inválido ou falha de alocação, retorna NULL. 
 
-/*Função I*/
-/*Recebe um ponteiro de Graph e retorna um ponteiro para uma cópia da matriz de adjacência que representa o grafo;
-em caso de parâmetro inválido ou falha de alocação, retorna NULL. Como é uma cópia, a mudança de seus valores não afetará a matriz original 
-que representa o gráfico.*/
+Como é uma cópia, a mudança de seus valores não afetará a matriz original que representa o gráfico.*/
 int **adjacency_matrix(Graph *G);
 
-/*Função Auxiliar*/
-/*Recebe um ponteiro de ponteiro para matriz quadrada dinâmica de inteiros e o tamanho de seu lado e desaloca a matriz.
-Retorna true, se a desalocação ocorreu corretamente; e false, senão. Colocada no .h, pois será usada na main*/
+/*Função I
+- Recebe um ponteiro de Graph e encontra o vértice com maior grau (maior número de vizinhos).
+- Retorna o índice desse vértice. */
+int max_neighbors(Graph *G); 
+
+/*Função Auxiliar
+- Recebe um ponteiro de ponteiro para matriz quadrada dinâmica de inteiros e o tamanho de seu lado e desaloca a matriz.
+- Retorna true, se a desalocação ocorreu corretamente; e false, senão. */
 bool remove_mat(int ***mat, int n);
 
 /*========================= Arquivo main.c ===============================*/
 
 int main(){
-
+    
     int option;
     int N, x, y, w;
     int res;
-    bool print_status = 1;
+    /* 0 -> imprime o grafo ou o array de vizinhos de um vértice.
+    1 -> imprime o que estiver em resp (para exist_edge e remove_edge, se não existir a aresta).
+    2 -> imprime o vértice com mais vizinhos.
+    3 -> imprime a matriz de adjacência. */
+    int print_status = 0;
     
     Graph *G = NULL;
     int *ngr = NULL;
@@ -87,6 +109,11 @@ int main(){
                 scanf("%d", &N);
                 // Caso já tenha um grafo criado e queira criar outro, temos que apagar o anterior primeiro
                 if(G != NULL) remove_graph(&G);
+
+                // Não faz permanecer com um array e uma matriz que não corresponde ao novo grafo
+                if(mat != NULL) remove_mat(&mat, tam_mat);
+                if(ngr != NULL) free(ngr), ngr = NULL;
+
                 G = MyGraph(N);
                 break;
 
@@ -99,7 +126,7 @@ int main(){
                 // get
                 scanf("%d %d", &x, &y);
                 res = exist_edge(G, x-1, y-1);
-                print_status = 0;
+                print_status = 1;
                 break;
             case 3:
                 // buscando vizinhos
@@ -112,19 +139,20 @@ int main(){
                 // removendo
                 scanf("%d %d", &x, &y);
                 res = remove_edge(G, x-1, y-1);
-                if(res == -1) print_status = 0;
+                if(res == -1) print_status = 1;
                 break;
             case 5:
-                // buscando o com mais vizinhos
-                res = max_neighbors(G);
-                print_status = 0;
-                break;
-            case 6:
                 // pegando matriz de adjacência
                 // Caso já tenha uma matriz de adjacência criado e queira criar outro, temos que apagar o anterior primeiro
                 if(mat != NULL) remove_mat(&mat, tam_mat);
                 mat = adjacency_matrix(G);
                 tam_mat = N;
+                print_status = 3;
+                break;
+            case 6:
+                // buscando o com mais vizinhos
+                res = max_neighbors(G);
+                print_status = 2;
                 break;
             default:
                 printf("unrecognized option %d!\n", option);
@@ -132,11 +160,27 @@ int main(){
         scanf("%d", &option);
     }
 
-    if(option == -1)
-        if(print_status)
+    if(option == -1){
+        if(print_status == 0)
             print_info(G, ngr, tam_ngr);
-        else
+        else if(print_status == 1)
             printf("%d", res);
+        else if(print_status == 2)
+            printf("max vertex: %d", res);
+        else if(print_status == 3){
+            printf("Adjacency Matrix:\n");
+            if(mat != NULL){
+                for(int i = 0; i < tam_mat; i++){
+                    for(int j = 0; j < tam_mat; j++){
+                        if(mat[i][j] == -1) printf("%3d ", 0);
+                        else printf("%3d ", mat[i][j]);
+                    }
+                    printf("\n");
+                }
+            }
+            
+        }
+    }
 
     //Desalocando vetor de vizinhos
     if(ngr != NULL) free(ngr);
@@ -159,8 +203,8 @@ struct graph_{
 
 /*======================FUNÇÃO AUXILIARES=========================*/
 
-/*Recebe o índice de um vértice e o número de vértices e verifica se o índice é válido.
-Retorna true, se o índice está entre 0 e n (inclusivo); false, caso contrário.*/
+/* Recebe o índice de um vértice e o número de vértices e verifica se o índice é válido.
+Retorna true, se o índice está entre 0 e n (inclusivo); false, caso contrário. */
 bool check_vertex(int v, int n){
     return (0 <= v && v < n);
 }
@@ -372,6 +416,36 @@ bool remove_graph(Graph **G){
 
 /*==========================FUNÇÃO H=============================*/
 
+int max_neighbors(Graph *G){
+    int vertice = -1; //Se G for um ponteiro inválido, retorna -1
+
+    if (G != NULL){
+
+        int mais_vizinhos = 0; //Guarda o maior grau de um vértice naquele grafo
+        int n = G->n;
+
+        for (int i = n-1; i >= 0; i--){
+
+            int mais_por_linha = 0; //conta quantos vizinhos tem o vértice i
+            
+            for (int j = n-1; j >= 0; j--){
+                if (G->matrix[i][j] != -1)
+                    mais_por_linha++;
+            }
+            if (mais_por_linha >= mais_vizinhos){ 
+                mais_vizinhos = mais_por_linha;
+                vertice = i;
+            }
+
+        }
+    }
+
+    // Retornando 1-indexado
+    return vertice+1; 
+}
+
+/*==========================FUNÇÃO I=============================*/
+
 int **adjacency_matrix(Graph *G){
     if(G == NULL) return NULL; 
 
@@ -408,33 +482,4 @@ int **adjacency_matrix(Graph *G){
     }
 
     return matrix_aux;
-}
-
-/*==========================FUNÇÃO I=============================*/
-
-int max_neighbors(Graph *G){
-    int vertice = -1; //Se G for um ponteiro inválido, retorna -1
-
-    if (G != NULL){
-
-        int mais_vizinhos = 0; //Guarda o maior grau de um vértice naquele grafo
-        int n = G->n;
-
-        for (int i = n-1; i >= 0; i--){
-
-            int mais_por_linha = 0; //conta quantos vizinhos tem o vértice i
-            
-            for (int j = n-1; j >= 0; j--){
-                if (G->matrix[i][j] != -1)
-                    mais_por_linha++;
-            }
-            if (mais_por_linha >= mais_vizinhos){ 
-                mais_vizinhos = mais_por_linha;
-                vertice = i;
-            }
-
-        }
-    }
-
-    return vertice;
 }
